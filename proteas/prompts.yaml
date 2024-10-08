@@ -1,0 +1,530 @@
+
+main:
+  - name: "business_documentation"
+    statement_suffix: "Here is "
+    placeholder_proclamation: "my business documentation "
+    placeholder: "business_documentation"
+
+  - name: "database_documentation"
+    statement_suffix: "Here is "
+    placeholder_proclamation: "my database documentation "
+    placeholder: "database_documentation"
+
+  - name: "user_input"
+    statement_suffix: "Here is "
+    placeholder_proclamation: "my question: "
+    placeholder: "user_input"
+
+  - name: "answer_style"
+    info: >
+       Answer should be professional and should not contain assumptions. 
+      
+      
+      
+    
+      
+
+
+
+
+
+#
+##  - name: "database_documentation"
+##    statement_suffix: "Here is "
+##    placeholder_proclamation: "my database documentation "
+##    placeholder: "database_documentation"
+##
+##
+##
+##  - name: "project_description"
+##    statement_suffix: "Here is "
+##    question_suffix: "What is "
+##    placeholder_proclamation: "my project description"
+##    placeholder: "project_description"
+##
+#
+#
+#
+#
+##
+##  - name: "project_step_structure"
+##    info: "My project documentation is being built by nested building blocks called 'Step'"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "Step structure which defines the whole documentation"
+##    placeholder : "project_step_structure"
+##
+##  - name: "step_guide"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "information about this particular step's instructions"
+##    placeholder : "step_guide"
+##
+##  - name: "info"
+##    statement_suffix: "Here is "
+##    question_suffix: "What is "
+##    placeholder_proclamation: "some useful fundamental information which can help you to answer"
+##    placeholder: "info"
+#
+#
+#
+#
+##context_prompts:
+##  - name: "importance_with_respect_to_project_description"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "the importance of this step with respect to project description"
+##    placeholder : "importance_with_respect_to_project_description"
+##
+##  - name: "purpose_in_terms_of_what_it_defines"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "the purpose of this step in terms of what it defines"
+##    placeholder : "purpose_in_terms_of_what_it_defines"
+#
+##  - name: "purpose_in_terms_of_which_documentation_path_it_leads"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "the purpose of this step in terms of which documentation path it leads"
+##    placeholder : "purpose_in_terms_of_which_documentation_path_it_leads"
+##
+##  - name: "what_details_should_not_include"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "the details this step should not include"
+##    placeholder : "what_details_should_not_include"
+##
+##  - name: "about_what_to_be_innovative"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "what aspects of this step should encourage innovation"
+##    placeholder : "about_what_to_be_innovative"
+##
+##  - name: "about_what_to_give_extra_details"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "which areas of this step should include extra details"
+##    placeholder : "about_what_to_give_extra_details"
+##
+##  - name: "about_what_to_elaborate"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "what specific elements should be elaborated"
+##    placeholder : "about_what_to_elaborate"
+##
+##
+##  - name: "about_what_should_not_break_established_flow"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "what aspects of this step should not break the established flow"
+##    placeholder : "about_what_should_not_break_established_flow"
+##
+##
+##
+##  - name: "what_to_check_if_content_is_completed"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "sufficient information to check to ensure that the content is complete"
+##    placeholder : "what_to_check_if_content_is_completed"
+##
+##
+##  - name: "immutable_references"
+##    statement_suffix: "Here is "
+##    question_suffix:  "What is "
+##    placeholder_proclamation: "the immutable references like code or variable names"
+##    placeholder : "immutable_references"
+#
+#
+##  - name: "step_info"
+##    statement_suffix: "Here is "
+##    question_suffix:  "Give me "
+##    placeholder_proclamation: "comprehensively summarized information about this step in depth. this information will be used to generate the content. "
+##    placeholder: "step_info"
+#
+#
+#command_prompts:
+#
+##  - name: "generate_content"
+##    info: >
+##      You are an AI which works as technical documentation generation engine. Your job is to meticulously explain
+##      and create documentation for a project so that project is fully defined. Now use all provided information and given instructions to create this part of the whole documentation and output should have more than 10000 tokens
+##      While generating content do not talk about step or documentation or step name itself. Focus on the generating information using step guide while using other provided materials to enhance relevancy and accuracy of the generation.
+##
+##  - name: "semantic_isolator_command"
+##    info: >
+##      Now use given semantic element and given text corpus, extract each single element with all details using following format.
+##
+##  - name: "detail"
+##    info: >
+##      Your job is to detail selected element using all provided content and per below instructions, Do not write summary or conclusion, or talk about the element itself at the beginning. Do not use markdown formatting(you can format the text without using special characters like #)
+##
+##
+##  - name: "database_description"
+##    statement_suffix: "Here is "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: "comprehensively written information about my database tables and their details. "
+##    placeholder: "database_description"
+##
+##
+##  - name: "nlp_input"
+##    statement_suffix: "Here is "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: "the question to be answered from provided database information above"
+##    placeholder: "nlp_input"
+##
+##  - name: "relaxed_nlp_input"
+##    statement_suffix: "Here is "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: "the user message/question to be answered from provided database information above"
+##    placeholder: "relaxed_nlp_input"
+##
+##
+##
+##  - name: "SQL_code_to_be_refined"
+##    statement_suffix: "Here is "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: "my SQL code in string format"
+##    placeholder: "SQL_code_to_be_refined"
+##
+##
+##  - name: "chat_history"
+##    statement_suffix: "Here is "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: "chat history consists of  ser's past inputs and system responses as well additional data"
+##    placeholder: "chat_history"
+##
+##
+##  - name: "refine_SQL_code"
+##    info: " Your job is to extract SQL code from string from given text. Output should be pure code without any explanation or note. Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as json or SQL ) without any additional comments or inferred information
+##       'code': 'here_is_pure_code' "
+##
+#
+#
+#  - name: "freetalk"
+#    info:  >
+#        Your job is to use the user input as context and respond to user input using provided documentation. Your answer should utilize all information provided.
+#
+##    info: >
+##      " Your job is to extract SQL code from string from given text. Output should be pure code without any explanation or note.  Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as json or SQL ) without any additional comments or inferred information:  { 'code': 'here_is_pure_code' }  "
+##
+#
+#  - name: "sql_creator"
+#    info: " Given the database information and given question provide me pure (no extra characters) SQL query to answer that question,   Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as json or SQL ) without any additional comments or inferred information   'code':  'here_is_pure_code' "
+#
+#  - name: "sql_creator_with_feedback"
+#    info: " Given the database information and given question  provide me a SQL query to answer that question. Take note of
+#     previously tried SQL query and output error and make sure that this time you give the correct SQL query"
+#
+#
+#  - name: "sql_output"
+#    info: " Output should not include any extra character or backticks. It must be Pure SQL without ``` or ] or likewise characters "
+#
+#
+#  - name: "message_type_categories"
+#    statement_suffix: "Here is "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: "message type categories"
+#    placeholder: "message_type_categories"
+#
+#  - name: "string_to_be_categorized"
+#    statement_suffix: "Here is "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: "string to be categorized"
+#    placeholder: "string_to_be_categorized"
+#
+#  - name: "categorisation_guide"
+#    info: >
+#       We have user's database documentation and access to database and some extra info as well. input string is user's question. I want to understand if user is
+#       asking easily answerable question through the documentation or we need to run a query in DB to answer this question.
+#
+#  - name: "message_type_find"
+#    info: >
+#      use Given text categories and given input string, categorize the string as one of them.
+#      Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as json or SQL ) without any additional comments or inferred information
+#            'category': 'here_is_category'
+##            'explanation': 'here_is_short_reasoning'
+#
+##      called
+##      Your job is to meticulously explain
+##      and create documentation for a project so that project is fully defined. Now use all provided information and given instructions to create this part of the whole documentation and output should have more than 10000 tokens  "
+#
+#
+##  """
+##  "Semantic Isolator" is a strong and precise term. It conveys that the tool or process is focused
+##  on isolating meaningful parts of a document or data based on the semantics (meaning) of the content.
+##  This term would work well for a system that not only separates sections but ensures that each isolated
+##  part retains its contextual or meaningful integrity.
+##  """
+#
+#
+#dynamic_expansion_prompts:
+#
+##  - name: "find_new_steps"
+##    statement_suffix: " "
+##    question_suffix: "Give me "
+##    info: >
+##      imagine the above provided content section is consumed and will be deleted and we should replaced with number of new steps/sections (At least 4) but each containing a lot more details.
+##      what steps/subsections are needed? (include a step called "bonder" and use it to put binding or leftover information inside of it )
+##      -the term step_guide is used to contain detailed information about that step, step_guide will be used to -
+##      And these new steps should be about different parts of the provided content but the context should be the same.
+##      Provide the answer strictly in the following JSON format (without the 'json' text ) without any additional comments or inferred information:
+##
+##      {{ step_name: step_guide,  "step_content_limits": "here should be detailed limitations about what this step shouldnt include" }}
+##      {{ step_name: step_guide,  "step_content_limits": "here should be detailed limitations about what this step shouldnt include" }}
+##      {{ step_name: step_guide,  "step_content_limits": "here should be detailed limitations about what this step shouldnt include" }}
+##      {{ step_name: step_guide,  "step_content_limits": "here should be detailed limitations about what this step shouldnt include" }}
+##
+##
+##  - name: "content_to_divide_into_pieces"
+##    statement_suffix: "Here is  "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: content, which is a step(we name parts of documentaion as steps) in my project documentation
+##    placeholder: "content_to_divide_into_pieces"
+##
+##
+##  - name: "divisible"
+##    info: This output will be seperated into parts later on. Make sure the output consists of (bullet point like) elements which preserve contextual or meaningful integrity. List as many of them.
+##
+##  - name: "selected_element_previous_answers"
+##    statement_suffix: "Here is  "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: already decided information about this selected element
+##    placeholder: "selected_element_previous_answers"
+##
+##  - name: "all_elements"
+##    statement_suffix: "Here is  "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: list of elements generated by using above information
+##    placeholder: "all_elements"
+##
+##  - name: "selected_element"
+##    statement_suffix: "Here is  "
+##    question_suffix: "Give me "
+##    placeholder_proclamation: selected element we are focusing on
+##    placeholder: "selected_element"
+#
+#  - name: "my_query_result_metadata"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: my database query result metadata
+#    placeholder: "my_query_result_metadata"
+#
+#  - name: "my_query_result"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation:  my database query result.
+#    placeholder: "my_query_result"
+#
+#  - name: "used_query"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: the query which result generated from
+#    placeholder: "used_query"
+#
+#  - name: "visualization_guide"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: the visual format i want you to output
+#    placeholder: "visualization_guide"
+#
+#  - name: "html_output"
+#    info: >
+#      i want you to take the result data and show it as either piechart, barchart, or linechart or table depending on the data, using pure html.
+#      the output should be pure html code in with no extra information or text because it will be rendered directly.  make sure follow these size limits :  height 450px
+#
+#  - name: "html_output_with_size"
+#    info: >
+#      i want you to take the given html code and use given the desired size to change it only in size.
+#      the output should be pure html code in with no extra information or text because it will be rendered directly.
+#
+#
+#
+#  - name: "pure_html_output"
+#    info: >
+#      the output should be pure html code in with no extra information or text because it will be rendered directly.  make sure follow these size limits : height 450px
+#
+#  - name: "my_html_code"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: my html code i am working on.
+#    placeholder: "my_html_code"
+#
+#
+#  - name: "desired_size_for_my_html_code"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: my desired size for my html code
+#    placeholder: "desired_size_for_my_html_code"
+#
+#
+#
+#
+#
+#  - name: "already_tried_query"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: the SQL query we tried and it did not worked
+#    placeholder: "already_tried_query"
+#
+#
+#  - name: "already_run_query"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: the SQL query we run
+#    placeholder: "already_run_query"
+#
+#
+#  - name: "sql_error"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: the SQL error we received
+#    placeholder: "sql_error"
+#
+#
+#  - name: "my_output_data"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: the result data after runnnig my query
+#    placeholder: "my_output_data"
+#
+#  - name: "my_output_metadata"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: some information/metadata about my result data  after runnnig my query
+#    placeholder: "my_output_metadata"
+#
+#  - name: "previous_summary_messages"
+#    statement_suffix: "Here is  "
+#    question_suffix: "Give me "
+#    placeholder_proclamation: the result data after runnnig my query
+#    placeholder: "previous_summary_messages"
+#
+#  - name: "summarize_task_and_create_message"
+#    info: >
+#        use all above information and understand what the user is trying to achieve or inspecting.  And then
+#        create a text message which will be shown together with output data It shouldnt be more than 5 sentences. Call user "you" and be warm.
+#
+#
+#
+# #  - name: "html_output"
+##    info: >
+##      i want to take the result data and show it as either piechart, barchart, or linechart depending on the data, using pure html.
+##      the output should be pure html code in following format with  no extra information or text because it will be rendered directly.
+##      {{"html" : html_code here}}
+#
+#
+#
+#
+#
+#
+#
+#
+#
+##  - name: "divisible"
+##    info: >
+##
+##      here is a {feature}
+##      Use the given step content to generate details about this {isolator_word}
+##      the de
+##
+##      i want you to
+##      This output will be seperated into parts later on. Make sure the output consists of (bullet point like) elements which preserve contextual or meaningful integrity. List as many of them.
+#
+#
+#
+#output_formatting_prompts:
+#
+#    - name: "categorizer"
+#      info: >
+#        Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as ```json. ) without any additional comments or inferred information:  {{ "lvl": "here_is_selected_category" }}"
+#
+#
+#    - name: "attribute_extractor"
+#      info: >
+#       Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as ```json. ) without any additional comments or inferred information:
+#       {{
+#       'attribure_1': value_1,
+#       'attribute_2': value_2
+#       }}
+#
+#    - name: "semantic_isolator_output"
+#      info: >
+#        Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as ```json. ) without any additional comments or inferred information:
+#
+#               {{ 'element_1':  all_relevant_info_about_element_here }}
+#               {{ 'element_2':  all_relevant_info_about_element_here }}
+#               {{ 'element_3':  all_relevant_info_about_element_here }}
+#               {{ 'element_4':  all_relevant_info_about_element_here }}
+#
+#        (provide as many as elements as you can)
+#
+#    - name: "semantic_isolator_output2"
+#      info: >
+#        Provide the answer strictly in the following JSON format (Do not include any Markdown or embedded JSON markers such as ```json. ) without any additional comments or inferred information:
+#
+#               {{  all_relevant_info_about_element_here }}
+#               {{  all_relevant_info_about_element_here }}
+#               {{  all_relevant_info_about_element_here }}
+#               {{  all_relevant_info_about_element_here }}
+#
+#         (provide as many as elements as you can)
+#
+#    - name: "no_markdown"
+#      info: >
+#        Do not use markdown formatting(you can format the text without using special characters like #)
+#
+#
+#
+##               {{
+##               'element_1: all_relevant_info_about_element_here,
+##               'element_2:  all_relevant_info_about_element_here,
+##               }}
+#
+##
+##
+##    - name: "semantic_isolator_info"
+##      info: >
+##        "You are an AI which works as semantic isolater. semantic isolater's job is to extract specified elements from
+##        corpus of text.
+##
+##
+##    - name: "semantic_element_name"
+##      statement_suffix: "Here is "
+##      question_suffix: "What is "
+##      placeholder_proclamation: " semantic element to base semantic extraction  "
+##      placeholder: "semantic_element_name"
+#
+#
+#
+##    - name: "content"
+##      statement_suffix: "Here is "
+##      question_suffix: "What is "
+##      placeholder_proclamation: "content/text to work withr"
+##      placeholder: "content"
+##
+##    - name: "step_context_for_isolation"
+##      statement_suffix: "Here is "
+##      question_suffix: "What is "
+##      placeholder_proclamation: "step's context to help you understand you content better"
+##      placeholder: "step_context_for_isolation"
+#
+#
+#
+##
+##                     In below given content there is list of
+##        semantic elements   Your job is to extract each element in seperate json with their number
+##      placeholder: "semantic_element_name"
+##
+#
+#
+#
+#
+#
+#    #compatibility_prompts:
+##
+##
+##validation_prompts:
+##
+##
+##refiner_prompts:
+##
