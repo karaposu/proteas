@@ -1,6 +1,6 @@
 import string
 import yaml
-from prompt_template_unit  import PromptTemplateUnit
+from .prompt_template_unit  import PromptTemplateUnit
 
 # from indented_logger import IndentedLogger
 # import logging
@@ -43,7 +43,7 @@ class Bin():
 
         self.questinables= questinables
 
-# PTOS prompt_template_orchestration_system
+
 
 class Proteas:
     def __init__(self, yaml_path=None, logger=None):

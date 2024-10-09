@@ -5,7 +5,7 @@ import os
 
 setup(
     name='proteas',  # Package name
-    version='0.0.1',  # Version of your package
+    version='0.0.2',  # Version of your package
     author='Enes Kuzucu',  # Your name
 
     description='A module to create prompt templates dynamically',  # Short description
