@@ -1,62 +1,27 @@
 import string
 import yaml
+import logging
 from .prompt_template_unit  import PromptTemplateUnit
+from .bin import  Bin
 
-# from indented_logger import IndentedLogger
-# import logging
-# logger_setup = IndentedLogger(name='prepromptbuilder', level=logging.INFO, include_func=True)
-
-l= []
-
-class Bin():
-    def __init__(self):
-        self.storage= []
-        self.questinables=[]
-
-    def add(self, thing):
-        self.storage.append(thing)
-
-    def reset(self):
-        self.storage = []
-
-    def bring(self, name):
-
-        for p in self.storage:
-            pass
-
-        for idx, p in enumerate(self.storage):
-            if  p.name == name:
-                return p
-
-    def bring_by_category(self, cat):
-        selections=[]
-        for idx, p in enumerate(self.storage):
-            if p.category == cat:
-                selections.append(p)
-        return  selections
-    def find_questionable_prompts(self):
-        questinables=[]
-        for idx, p in enumerate(self.storage):
-            if p.category=="context_prompts":
-               # question = p
-                questinables.append(p)
-
-        self.questinables= questinables
-
-
+logger = logging.getLogger(__name__)
 
 class Proteas:
-    def __init__(self, yaml_path=None, logger=None):
+    def __init__(self, yaml_path=None, debug=False):
         """Initialize the PromptManager without any specific attributes."""
         self.bin= Bin()
         self.unit_objects=[]
+        self.debug= debug
 
-
-        # self.logger = logger if logger else logger_setup.get_logger()
-        self.logger =logger
+        self.logger = logging.getLogger(__name__)
 
         if yaml_path:
             self.load_unit_skeletons_from_yaml(yaml_path)
+
+    def _debug(self, message):
+
+        if self.debug:
+            self.logger.debug(message)
 
     def load_yaml_file(self,file_path):
         with open(file_path, 'r') as file:
@@ -82,7 +47,8 @@ class Proteas:
 
         yaml_data = self.load_yaml_file(yaml_file_path)
         self.unit_objects = self.create_units_from_skeletons(yaml_data)
-        print( len(self.unit_objects), "prompt template units loaded")
+        self._debug(f" {len(self.unit_objects)} prompt template units loaded")
+        #print( len(self.unit_objects), "prompt template units loaded")
 
     def bring_units(self, list_of_unit_names):
         p = []
@@ -404,6 +370,13 @@ class Proteas:
 
 
 def main():
+    import sys
+
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        stream=sys.stdout
+    )
 
     proteas = Proteas('prompts.yaml')
 
