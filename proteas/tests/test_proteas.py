@@ -129,33 +129,43 @@ class TestProteasEnabledDisabled:
 
 
 class TestProteasPlaceholders:
-    """Placeholder/kwargs tests."""
+    """Placeholder/kwargs tests using $variable syntax."""
 
     def test_compile_with_placeholder(self):
         p = Proteas()
-        p.add(PromptTemplateUnit(name="greeting", content="Hello {name}!"))
+        p.add(PromptTemplateUnit(name="greeting", content="Hello $name!"))
         assert p.compile(name="World") == "Hello World!"
 
     def test_compile_multiple_units_same_placeholder(self):
         p = Proteas()
-        p.add(PromptTemplateUnit(name="a", content="Dear {name},"))
-        p.add(PromptTemplateUnit(name="b", content="Goodbye {name}!"))
+        p.add(PromptTemplateUnit(name="a", content="Dear $name,"))
+        p.add(PromptTemplateUnit(name="b", content="Goodbye $name!"))
         result = p.compile(name="Alice")
         assert result == "Dear Alice,\n\nGoodbye Alice!"
 
     def test_compile_different_placeholders(self):
         p = Proteas()
-        p.add(PromptTemplateUnit(name="header", content="Task: {task}"))
-        p.add(PromptTemplateUnit(name="body", content="Data: {data}"))
+        p.add(PromptTemplateUnit(name="header", content="Task: $task"))
+        p.add(PromptTemplateUnit(name="body", content="Data: $data"))
         result = p.compile(task="Extract", data="msg1\nmsg2")
         assert result == "Task: Extract\n\nData: msg1\nmsg2"
 
     def test_units_without_placeholders_unaffected(self):
         p = Proteas()
         p.add(PromptTemplateUnit(name="static", content="Static content"))
-        p.add(PromptTemplateUnit(name="dynamic", content="Hello {name}!"))
+        p.add(PromptTemplateUnit(name="dynamic", content="Hello $name!"))
         result = p.compile(name="World")
         assert result == "Static content\n\nHello World!"
+
+    def test_json_content_not_affected(self):
+        """JSON braces in content don't conflict with placeholders."""
+        p = Proteas()
+        p.add(PromptTemplateUnit(
+            name="schema",
+            content='{"result": {"data": $data}}'
+        ))
+        result = p.compile(data='"value"')
+        assert result == '{"result": {"data": "value"}}'
 
 
 class TestProteasManagement:

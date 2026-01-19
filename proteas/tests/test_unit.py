@@ -72,19 +72,19 @@ class TestPromptTemplateUnitEnabled:
 
 
 class TestPromptTemplateUnitPlaceholders:
-    """Placeholder/kwargs tests."""
+    """Placeholder/kwargs tests using $variable syntax."""
 
     def test_single_placeholder(self):
         unit = PromptTemplateUnit(
             name="test",
-            content="Hello {name}!"
+            content="Hello $name!"
         )
         assert unit.render(name="World") == "Hello World!"
 
     def test_multiple_placeholders(self):
         unit = PromptTemplateUnit(
             name="test",
-            content="{greeting} {name}, welcome to {place}!"
+            content="$greeting $name, welcome to $place!"
         )
         result = unit.render(greeting="Hello", name="Alice", place="Wonderland")
         assert result == "Hello Alice, welcome to Wonderland!"
@@ -96,27 +96,44 @@ class TestPromptTemplateUnitPlaceholders:
     def test_placeholder_in_multiline(self):
         unit = PromptTemplateUnit(
             name="test",
-            content="Messages:\n{messages}\n\nEnd of messages."
+            content="Messages:\n$messages\n\nEnd of messages."
         )
         result = unit.render(messages="msg1\nmsg2\nmsg3")
         assert result == "Messages:\nmsg1\nmsg2\nmsg3\n\nEnd of messages."
 
     def test_unused_kwargs_ignored(self):
-        unit = PromptTemplateUnit(name="test", content="Hello {name}!")
+        unit = PromptTemplateUnit(name="test", content="Hello $name!")
         # Extra kwargs should not cause error
         result = unit.render(name="World", unused="ignored")
         assert result == "Hello World!"
 
     def test_no_kwargs_leaves_placeholders_unfilled(self):
         """When no kwargs passed, placeholders remain as-is."""
-        unit = PromptTemplateUnit(name="test", content="Hello {name}!")
-        assert unit.render() == "Hello {name}!"
+        unit = PromptTemplateUnit(name="test", content="Hello $name!")
+        assert unit.render() == "Hello $name!"
 
-    def test_partial_kwargs_raises_error(self):
-        """When some kwargs passed but placeholder missing, raises KeyError."""
-        unit = PromptTemplateUnit(name="test", content="Hello {name} from {place}!")
-        with pytest.raises(KeyError):
-            unit.render(name="World")  # Missing 'place'
+    def test_partial_kwargs_leaves_missing_unchanged(self):
+        """When some kwargs passed but placeholder missing, it remains as-is (safe_substitute)."""
+        unit = PromptTemplateUnit(name="test", content="Hello $name from $place!")
+        result = unit.render(name="World")  # Missing 'place'
+        assert result == "Hello World from $place!"
+
+    def test_json_braces_not_affected(self):
+        """JSON braces {} are NOT treated as placeholders."""
+        unit = PromptTemplateUnit(
+            name="test",
+            content='{"key": "value", "data": $data}'
+        )
+        result = unit.render(data='"test"')
+        assert result == '{"key": "value", "data": "test"}'
+
+    def test_braced_placeholder_syntax(self):
+        """${variable} syntax also works."""
+        unit = PromptTemplateUnit(
+            name="test",
+            content="Hello ${name}!"
+        )
+        assert unit.render(name="World") == "Hello World!"
 
 
 class TestPromptTemplateUnitCopy:

@@ -6,6 +6,7 @@ Units are independent and know nothing about other units.
 """
 
 from dataclasses import dataclass, field
+from string import Template
 
 
 @dataclass
@@ -15,12 +16,17 @@ class PromptTemplateUnit:
 
     Attributes:
         name: Identifier for this unit (for debugging and lookup)
-        content: The actual prompt text
+        content: The actual prompt text (use $variable for placeholders)
         order: Optional position when combining (lower = earlier).
                If None, combiner uses insertion order.
         prefix: Optional header text added before content
         suffix: Optional footer text added after content
         enabled: Whether this unit should be included when rendering
+
+    Placeholder syntax:
+        Use $variable or ${variable} for placeholders in content.
+        This allows JSON braces {} to be used without escaping.
+        Example: content="Analyze: $messages" → render(messages="Hello")
     """
 
     name: str
@@ -36,7 +42,7 @@ class PromptTemplateUnit:
 
         Args:
             **kwargs: Values to fill placeholders in content.
-                      e.g., render(messages="...") fills {messages}
+                      e.g., render(messages="...") fills $messages
 
         Returns:
             The combined prefix + content + suffix, or empty string if disabled.
@@ -50,7 +56,11 @@ class PromptTemplateUnit:
             parts.append(self.prefix)
 
         if self.content:
-            content = self.content.format(**kwargs) if kwargs else self.content
+            if kwargs:
+                # Use safe_substitute to leave unknown placeholders unchanged
+                content = Template(self.content).safe_substitute(**kwargs)
+            else:
+                content = self.content
             parts.append(content)
 
         if self.suffix:

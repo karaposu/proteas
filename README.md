@@ -1,410 +1,260 @@
-# PROTEAS
+# Proteas
 
-**PROTEAS** is a scalable prompt engineering and management library designed to streamline the creation and management of dynamic prompt templates for AI models.
+A domain-agnostic library for composing prompts from reusable units.
 
-Instead of handling the entire lifecycle of a prompt, **PROTEAS** specializes in the **stacking of prompt templates**—unformatted prompts with placeholders—leaving the task of filling in these templates to common LLM libraries like LangChain. This approach can be seen as a **replacement for prompt chaining** in libraries such as LangChain, offering more flexibility and control.
-
----
-
-## Table of Contents
-
-- [Key Features](#key-features)
-- [Getting Started](#getting-started)
-  - [Installation](#installation)
-  - [Creating Your `prompts.yaml`](#creating-your-promptyaml)
-  - [Assembling and Formatting Prompts](#assembling-and-formatting-prompts)
-  - [Integration into Your Application](#integration-into-your-application)
-- [Quick Demo](#quick-demo)
-  - [Use Case: Building an LLM-Based Chatbot - Database Whisperer](#use-case-building-an-llm-based-chatbot---database-whisperer)
-    - [Objective](#objective)
-    - [Problem](#problem)
-    - [Solution with PROTEAS](#solution-with-proteas)
-    - [Step-by-Step Guide](#step-by-step-guide)
-      - [1. Define Prompt Template Units in `prompts.yaml`](#1-define-prompt-template-units-in-promptyaml)
-      - [2. Install PROTEAS](#2-install-proteas)
-      - [3. Assemble Prompt Templates Using PROTEAS](#3-assemble-prompt-templates-using-proteas)
-      - [4. Format the Generated Prompt Templates with LangChain](#4-format-the-generated-prompt-templates-with-langchain)
-    - [Summary](#summary)
-- [Additional Example: Running SQL Queries](#additional-example-running-sql-queries)
-  - [Extending `prompts.yaml`](#extending-promptyaml)
-  - [Assembling Prompt Template for SQL Queries](#assembling-prompt-template-for-sql-queries)
-  - [Formatting with LangChain](#formatting-with-langchain)
-- [Conclusion](#conclusion)
-- [License](#license)
-
----
-
-## Key Features
-
-- **Conditional Prompt Stacking**: Stack prompt templates conditionally, allowing the creation of adaptable prompts based on specific scenarios or use cases.
-- **Custom Categories for Templates**: Organize prompt templates into user-defined categories, making it easy to call and merge templates based on modular, structured designs.
-- **"Send to Bin" Logic**: Temporarily store parts of a prompt in a "bin" and retrieve or merge them at a later point, enabling more dynamic and flexible prompt building over multiple stages.
-- **Statement vs. Question Formatting**: Prompts can be defined in a way that allows them to be formatted as informative statements or questions, enabling you to switch between different styles of interactions without changing the core context.
-- **Intuitive Interface**: Designed with simplicity and usability in mind, the library enables users to construct prompts effortlessly without complex chaining or dependencies.
-
----
-
-## Getting Started
-
-### Installation
-
-To install **PROTEAS**, use the following command:
+## Installation
 
 ```bash
 pip install proteas
 ```
 
-**Note**: Ensure that the `proteas` package is available on PyPI. If not, provide instructions on how to install it directly from the source repository.
-
-### Creating Your `prompts.yaml`
-
-Define your prompt template units in a YAML file named `prompts.yaml`. This file will contain all the prompt units that you will assemble dynamically.
-
-```yaml
-main:
-  - name: "business_documentation"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my business documentation:"
-    placeholder: "business_documentation"
-
-  - name: "user_input"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my question:"
-    placeholder: "user_input"
-
-  - name: "answer_style"
-    info: >
-      Answer should be professional and should not contain assumptions.
-
-  - name: "database_documentation"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my database documentation:"
-    placeholder: "database_documentation"
-```
-
-**Explanation**:
-
-- Each prompt unit has attributes like `name`, `statement_suffix`, `placeholder_proclamation`, `placeholder`, and `info`.
-- The `placeholder` is where dynamic data will be inserted when formatting the prompt.
-- The `main` category can be customized or extended as needed.
-
-### Assembling and Formatting Prompts
-
-Use **PROTEAS** to craft your prompts and integrate them with LangChain or your preferred LLM library.
-
-### Integration into Your Application
-
-Utilize the formatted prompts within your application logic to interact with AI models seamlessly.
-
----
-
-## Quick Demo
-
-### Use Case: Building an LLM-Based Chatbot - **Database Whisperer**
-
-Imagine building an LLM-based chatbot called **Database Whisperer**. This chatbot allows users to interact with their business documents, create SQL queries, and run these queries on their databases.
-
-#### Objective
-
-Demonstrate how **PROTEAS** can be used to manage and assemble prompt templates efficiently, avoiding redundancy and adhering to the DRY (Don't Repeat Yourself) principle.
-
-#### Problem
-
-Creating multiple prompt templates with overlapping content can lead to redundancy and maintenance challenges. For instance, crafting separate prompt templates for different user inputs that share common sections violates the DRY principle.
-
-#### Solution with PROTEAS
-
-**PROTEAS** elegantly solves this problem by allowing you to define prompt template units in a YAML file and assemble them dynamically based on your needs.
-
-#### Step-by-Step Guide
-
-##### 1. **Define Prompt Template Units in `prompts.yaml`**
-
-Create a `prompts.yaml` file that contains all the necessary prompt template units.
-
-```yaml
-main:
-  - name: "business_documentation"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my business documentation:"
-    placeholder: "business_documentation"
-
-  - name: "user_input"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my question:"
-    placeholder: "user_input"
-
-  - name: "answer_style"
-    info: >
-      Answer should be professional and should not contain assumptions.
-
-  - name: "database_documentation"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my database documentation:"
-    placeholder: "database_documentation"
-```
-
-**Explanation**:
-
-- **`business_documentation`**, **`user_input`**, and **`database_documentation`**: These units include placeholders that will be filled with dynamic data.
-- **`answer_style`**: This unit provides static instructions for the LLM without requiring a placeholder.
-
-##### 2. **Install PROTEAS**
-
-Ensure you have **PROTEAS** installed:
-
-```bash
-pip install proteas
-```
-
-##### 3. **Assemble Prompt Templates Using PROTEAS**
-
-Use **PROTEAS** to load the YAML configuration and craft the desired prompt templates.
+## Quick Start
 
 ```python
-from proteas import Proteas
+from proteas import Proteas, PromptTemplateUnit
 
-# Initialize PROTEAS with the YAML file
-proteas = Proteas(yaml_path="prompts.yaml")
-# Output: 4 prompt template units loaded
+# Define reusable units
+header = PromptTemplateUnit(
+    name="header",
+    content="You are a helpful assistant.",
+    order=1
+)
 
-# Define the order of prompt units for Prompt Template 1
-order_1 = ["business_documentation", "user_input", "answer_style"]
-prompt_template_1 = proteas.craft(order_1)
-print("Prompt Template 1:")
-print(prompt_template_1)
+task = PromptTemplateUnit(
+    name="task",
+    content="Analyze the following data: $data",
+    order=2
+)
+
+# Compose and compile
+prompt = (Proteas()
+    .add(header)
+    .add(task)
+    .compile(data="user input here"))
+
+print(prompt)
+# Output:
+# You are a helpful assistant.
+#
+# Analyze the following data: user input here
 ```
 
-**Output**:
+## Core Concepts
 
-```plaintext
-Prompt Template 1:
-Here is my business documentation: {business_documentation}
+### PromptTemplateUnit
 
-Here is my question: {user_input}
-
-Answer should be professional and should not contain assumptions.
-```
+A unit is a single, reusable piece of prompt content:
 
 ```python
-# Define the order of prompt units for Prompt Template 2
-order_2 = ["business_documentation", "database_documentation", "user_input", "answer_style"]
-prompt_template_2 = proteas.craft(order_2)
-print("Prompt Template 2:")
-print(prompt_template_2)
+from proteas import PromptTemplateUnit
+
+unit = PromptTemplateUnit(
+    name="greeting",           # Identifier for lookup
+    content="Hello $name!",    # The actual text (with optional placeholders)
+    order=10,                  # Position when combining (lower = earlier)
+    prefix="=== START ===",    # Optional text before content
+    suffix="=== END ===",      # Optional text after content
+    enabled=True               # Whether to include when rendering
+)
 ```
 
-**Output**:
+### Placeholder Syntax
 
-```plaintext
-Prompt Template 2:
-Here is my business documentation: {business_documentation}
-
-Here is my database documentation: {database_documentation}
-
-Here is my question: {user_input}
-
-Answer should be professional and should not contain assumptions.
-```
-
-**Explanation**:
-
-- **`order_1`** assembles `prompt_template_1` by stacking the relevant prompt units.
-- **`order_2`** assembles `prompt_template_2` by including the additional `database_documentation` unit.
-
-##### 4. **Format the Generated Prompt Templates with LangChain**
-
-Once you have the assembled prompt templates, you can use LangChain to fill in the placeholders with actual data.
-
-First, ensure that LangChain is installed:
-
-```bash
-pip install langchain
-```
-
-Then proceed to format the prompts:
+Proteas uses `$variable` syntax for placeholders (via Python's `string.Template`). This allows JSON and other content with curly braces to work without escaping:
 
 ```python
-from langchain.prompts import PromptTemplate
+unit = PromptTemplateUnit(
+    name="schema",
+    content='Return JSON: {"result": $value}'
+)
 
-# Example context data for Prompt Template 1
-context_data_1 = {
-    "business_documentation": "We specialize in handcrafted chocolates and have 15 stores nationwide.",
-    "user_input": "What are your best-selling products?"
-}
-
-# Create a PromptTemplate object from the assembled template
-prompt_1 = PromptTemplate.from_template(prompt_template_1)
-
-# Format the prompt with the provided data
-formatted_prompt_1 = prompt_1.format(**context_data_1)
-
-print("Formatted Prompt Template 1:")
-print(formatted_prompt_1)
+# JSON braces are preserved, only $value is substituted
+result = unit.render(value='"hello"')
+# Output: Return JSON: {"result": "hello"}
 ```
 
-**Output**:
+Both `$variable` and `${variable}` syntaxes are supported.
 
-```plaintext
-Formatted Prompt Template 1:
-Here is my business documentation: We specialize in handcrafted chocolates and have 15 stores nationwide.
+### Proteas Combiner
 
-Here is my question: What are your best-selling products?
-
-Answer should be professional and should not contain assumptions.
-```
+The `Proteas` class combines multiple units into a single prompt:
 
 ```python
-# Example context data for Prompt Template 2
-context_data_2 = {
-    "business_documentation": "We specialize in handcrafted chocolates and have 15 stores nationwide.",
-    "database_documentation": "Database includes tables for products, sales, and customer feedback.",
-    "user_input": "How can we improve our inventory turnover rate?"
-}
+from proteas import Proteas, PromptTemplateUnit
 
-# Create a PromptTemplate object from the assembled template
-prompt_2 = PromptTemplate.from_template(prompt_template_2)
+p = Proteas(separator="\n\n")  # Default separator is double newline
 
-# Format the prompt with the provided data
-formatted_prompt_2 = prompt_2.format(**context_data_2)
+# Add units (method chaining supported)
+p.add(PromptTemplateUnit(name="a", content="First"))
+p.add(PromptTemplateUnit(name="b", content="Second"))
 
-print("Formatted Prompt Template 2:")
-print(formatted_prompt_2)
+# Or add many at once
+p.add_many([unit1, unit2, unit3])
+
+# Compile with placeholder values
+prompt = p.compile(messages="...", context="...")
 ```
 
-**Output**:
+## Ordering
 
-```plaintext
-Formatted Prompt Template 2:
-Here is my business documentation: We specialize in handcrafted chocolates and have 15 stores nationwide.
-
-Here is my database documentation: Database includes tables for products, sales, and customer feedback.
-
-Here is my question: How can we improve our inventory turnover rate?
-
-Answer should be professional and should not contain assumptions.
-```
-
-**Explanation**:
-
-- **LangChain Integration**: By using LangChain’s `PromptTemplate`, you can seamlessly fill in the placeholders with dynamic data, leveraging **PROTEAS** for the prompt assembly.
-- **Flexibility**: You can easily add or remove prompt units in the `order` list to customize the prompts as needed without duplicating code or templates.
-
-#### Summary
-
-Using **PROTEAS**, you can efficiently manage and assemble prompt templates, ensuring adherence to best practices like DRY while maintaining flexibility and scalability. This approach simplifies prompt management, especially as your application grows in complexity.
-
----
-
-## Additional Example: Running SQL Queries
-
-To further demonstrate **PROTEAS**'s capabilities, let's consider another use case where the chatbot helps users create and run SQL queries based on their business and database documentation.
-
-### Extending `prompts.yaml`
-
-Add a new prompt unit for SQL query creation.
-
-```yaml
-main:
-  - name: "business_documentation"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my business documentation:"
-    placeholder: "business_documentation"
-
-  - name: "database_documentation"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my database documentation:"
-    placeholder: "database_documentation"
-
-  - name: "user_input"
-    statement_suffix: "Here is"
-    placeholder_proclamation: "my request:"
-    placeholder: "user_input"
-
-  - name: "sql_query_instruction"
-    info: >
-      Based on the provided documentation, create an optimized SQL query.
-
-  - name: "answer_style"
-    info: >
-      Answer should be professional and should not contain assumptions.
-```
-
-### Assembling Prompt Template for SQL Queries
+Units can be ordered explicitly or by insertion order:
 
 ```python
-# Define the order for SQL query creation
-order_sql = ["business_documentation", "database_documentation", "user_input", "sql_query_instruction", "answer_style"]
-prompt_template_sql = proteas.craft(order_sql)
-print("Prompt Template for SQL Queries:")
-print(prompt_template_sql)
+# Explicit order (lower numbers first)
+header = PromptTemplateUnit(name="header", content="...", order=1)
+body = PromptTemplateUnit(name="body", content="...", order=50)
+footer = PromptTemplateUnit(name="footer", content="...", order=100)
+
+# order=None uses insertion order
+p = Proteas()
+p.add(footer)   # Added first, but order=100
+p.add(header)   # Added second, but order=1
+p.add(body)     # Added third, order=50
+
+# Result: header, body, footer (by explicit order)
 ```
 
-**Output**:
+When orders are equal or all None, insertion order is the tiebreaker.
 
-```plaintext
-Prompt Template for SQL Queries:
-Here is my business documentation: {business_documentation}
+## Enable/Disable Units
 
-Here is my database documentation: {database_documentation}
-
-Here is my request: {user_input}
-
-Based on the provided documentation, create an optimized SQL query.
-
-Answer should be professional and should not contain assumptions.
-```
-
-### Formatting with LangChain
+Units can be toggled on or off:
 
 ```python
-# Example context data for the SQL prompt
-context_data_sql = {
-    "business_documentation": "We manage an online bookstore with a diverse range of genres.",
-    "database_documentation": "Tables include books, authors, customers, and orders with relevant foreign keys.",
-    "user_input": "Find the top 5 bestselling authors in the last quarter."
-}
+unit = PromptTemplateUnit(name="optional", content="...", enabled=False)
 
-# Create a PromptTemplate object from the assembled template
-prompt_sql = PromptTemplate.from_template(prompt_template_sql)
+# Enable/disable on the unit
+unit.enable()
+unit.disable()
 
-# Format the prompt with the provided data
-formatted_prompt_sql = prompt_sql.format(**context_data_sql)
-
-print("Formatted Prompt Template for SQL Queries:")
-print(formatted_prompt_sql)
+# Or via Proteas by name
+p = Proteas()
+p.add(unit)
+p.disable("optional")
+p.enable("optional")
 ```
 
-**Output**:
+## Unit Management
 
-```plaintext
-Formatted Prompt Template for SQL Queries:
-Here is my business documentation: We manage an online bookstore with a diverse range of genres.
+```python
+p = Proteas()
+p.add(unit1)
+p.add(unit2)
 
-Here is my database documentation: Tables include books, authors, customers, and orders with relevant foreign keys.
+# Get a unit by name
+unit = p.get_unit("unit1")
 
-Here is my request: Find the top 5 bestselling authors in the last quarter.
+# Remove a unit
+p.remove("unit1")
 
-Based on the provided documentation, create an optimized SQL query.
+# Clear all units
+p.clear()
 
-Answer should be professional and should not contain assumptions.
+# Properties
+p.units          # All units in insertion order
+p.enabled_units  # Only enabled units
+len(p)           # Number of units
 ```
 
-**Integration**
+## Generating Combinations
 
-Use `formatted_prompt_sql` as input to your LLM to generate the desired SQL query.
+For scenarios where you need all combinations of units:
 
----
+```python
+from proteas import generate_combinations, count_combinations, PromptTemplateUnit
 
-## Conclusion
+units = [
+    PromptTemplateUnit(name="a", content="A"),
+    PromptTemplateUnit(name="b", content="B"),
+    PromptTemplateUnit(name="c", content="C"),
+]
 
-The **PROTEAS** library significantly simplifies the process of managing and assembling prompt templates for AI applications. By leveraging YAML configurations and providing a flexible, modular approach, **PROTEAS** ensures that your prompts remain organized, maintainable, and scalable.
+# Count combinations
+total = count_combinations(n=3, min_size=2, max_size=2)  # 3
 
-Whether you're building a chatbot like **Database Whisperer** or developing any AI-driven application that relies on dynamic prompts, **PROTEAS** offers the tools you need to streamline your prompt engineering workflows effectively.
+# Generate combinations
+for names, proteas_instance in generate_combinations(units, min_size=2, max_size=2):
+    print(names)  # ('a', 'b'), ('a', 'c'), ('b', 'c')
+    prompt = proteas_instance.compile()
+```
 
----
+You can also include base units that appear in all combinations:
+
+```python
+header = PromptTemplateUnit(name="header", content="Header", order=1)
+footer = PromptTemplateUnit(name="footer", content="Footer", order=100)
+
+for names, p in generate_combinations(
+    units=dimension_units,
+    min_size=2,
+    max_size=4,
+    base_units=[header, footer]
+):
+    prompt = p.compile(messages="...")
+```
+
+## Immutable Copies
+
+Create modified copies without mutating the original:
+
+```python
+original = PromptTemplateUnit(name="test", content="Hello", order=10)
+
+# Create copies with modifications
+with_new_content = original.with_content("Goodbye")
+with_new_order = original.with_order(99)
+
+# Original is unchanged
+assert original.content == "Hello"
+assert original.order == 10
+```
+
+## API Reference
+
+### PromptTemplateUnit
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `name` | `str` | Identifier for the unit |
+| `content` | `str` | The prompt text (supports `$placeholder` syntax) |
+| `order` | `int \| None` | Sort position (None = use insertion order) |
+| `prefix` | `str \| None` | Text added before content |
+| `suffix` | `str \| None` | Text added after content |
+| `enabled` | `bool` | Include in output when True |
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `render(**kwargs)` | `str` | Render with placeholder substitution |
+| `enable()` | `self` | Enable the unit |
+| `disable()` | `self` | Disable the unit |
+| `with_content(str)` | `PromptTemplateUnit` | Copy with new content |
+| `with_order(int)` | `PromptTemplateUnit` | Copy with new order |
+
+### Proteas
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `add(unit)` | `self` | Add a unit |
+| `add_many(units)` | `self` | Add multiple units |
+| `compile(**kwargs)` | `str` | Assemble all enabled units |
+| `get_unit(name)` | `Unit \| None` | Find unit by name |
+| `remove(name)` | `self` | Remove unit by name |
+| `clear()` | `self` | Remove all units |
+| `enable(name)` | `self` | Enable unit by name |
+| `disable(name)` | `self` | Disable unit by name |
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `units` | `list[Unit]` | All units |
+| `enabled_units` | `list[Unit]` | Only enabled units |
+
+### Combination Functions
+
+| Function | Description |
+|----------|-------------|
+| `generate_combinations(units, min_size, max_size, base_units)` | Yield `(names, Proteas)` for all combinations |
+| `count_combinations(n, min_size, max_size)` | Count total combinations |
 
 ## License
 
-[MIT License](LICENSE)
-
+MIT
